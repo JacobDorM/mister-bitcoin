@@ -10,7 +10,7 @@ import { spendBalance } from '../store/actions/userActions'
 
 class _ContactApp extends Component {
   state = {
-    filterBy: '',
+    filterBy: this.props.filterBy,
   }
 
   async componentDidMount() {
@@ -21,14 +21,10 @@ class _ContactApp extends Component {
     await this.props.removeContact(contactId)
   }
 
-  // onChangeFilter = (filterBy) => {
-  //   this.props.setFilterBy(filterBy)
-  //   this.props.loadContacts()
-  // }
-
-  onChangeFilter = async (filterBy) => {
-    await this.props.setFilterBy(filterBy)
-    this.props.loadContacts()
+  onChangeFilter = async (e) => {
+    await utilService.onChange(e, this, 'filterBy')
+    await this.props.setFilterBy({ ...this.state.filterBy })
+    await this.props.loadContacts()
   }
 
   onSpendBalance = () => {
@@ -36,19 +32,14 @@ class _ContactApp extends Component {
   }
 
   render() {
-    const onChange = utilService.onChange
     const { contacts } = this.props
     if (!contacts) return <div>Loading...</div>
     const TextCmp = () => <span>Nice Button</span>
     const Icon = () => '🍇'
-    const onChangeFilter = async (e) => {
-      await onChange(e, this, 'filterBy')
-      await this.onChangeFilter({ ...this.state.filterBy })
-    }
 
     return (
       <div className="contact-app">
-        <ContactFilter onChangeFilter={onChangeFilter} />
+        <ContactFilter onChangeFilter={this.onChangeFilter} />
         <Link to="/contact/edit">Add Contact</Link>
         <ContactList history={this.props.history} onRemoveContact={this.onRemoveContact} contacts={contacts} />
         <NiceButton Icon={Icon} className="nice-button" onClick={() => console.log('nice button clicked')}>
@@ -65,6 +56,7 @@ class _ContactApp extends Component {
 const mapStateToProps = (state) => {
   return {
     contacts: state.contactModule.contacts,
+    filterBy: state.contactModule.filterBy,
   }
 }
 

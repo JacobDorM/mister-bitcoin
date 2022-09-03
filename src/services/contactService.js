@@ -15,7 +15,7 @@ _createContacts()
 async function query(filterBy = null) {
   let contactsToReturn = await storageService.query(CONTACTS_KEY)
   if (filterBy) {
-    contactsToReturn = filter(filterBy, contactsToReturn)
+    contactsToReturn = utilService.filter(filterBy, contactsToReturn)
   }
   return utilService.sortBy(contactsToReturn, 'name')
 }
@@ -39,14 +39,6 @@ function getEmpty() {
     email: '',
     phone: '',
   }
-}
-
-function filter(filterBy, contacts) {
-  return contacts.filter((contact) => {
-    let isMatch = true
-    Object.entries(filterBy).forEach(([key, value]) => (isMatch = isMatch && contact[key].toLowerCase().includes(value.toLowerCase())))
-    return isMatch
-  })
 }
 
 async function _createContacts() {

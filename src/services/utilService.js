@@ -5,6 +5,7 @@ export const utilService = {
   sortBy,
   onChange,
   onSubmit,
+  filter,
 }
 
 function saveToStorage(key, value) {
@@ -25,8 +26,8 @@ function makeId(length = 5) {
   return txt
 }
 
-function sortBy(arr, field) {
-  return arr.sort((a, b) => {
+function sortBy(entities, field) {
+  return entities.sort((a, b) => {
     if (a[field].toLocaleLowerCase() < b[field].toLocaleLowerCase()) {
       return -1
     }
@@ -42,15 +43,18 @@ async function onChange(event, thisComp, entity) {
   const { target } = event
   const field = target.name
   const value = target.type === 'number' ? +target.value || '' : target.value
-  thisComp.setState(
-    (prevState) => ({ [entity]: { ...prevState[entity], [field]: value } })
-    // () => {
-    //   console.log({ ...thisComp.state })
-    // }
-  )
+  thisComp.setState((prevState) => ({ [entity]: { ...prevState[entity], [field]: value } }))
 }
 
 function onSubmit(event, thisComp, action, entity) {
   event.preventDefault()
   thisComp.props[action]({ ...thisComp.state[entity] })
+}
+
+function filter(filterBy, entities) {
+  return entities.filter((entity) => {
+    let isMatch = true
+    Object.entries(filterBy).forEach(([key, value]) => (isMatch = isMatch && entity[key].toLowerCase().includes(value.toLowerCase())))
+    return isMatch
+  })
 }
