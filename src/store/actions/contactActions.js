@@ -4,6 +4,7 @@ export function loadContacts() {
   return async (dispatch, getState) => {
     try {
       const { filterBy } = getState().contactModule
+      console.log(filterBy)
       const contacts = await contactService.query(filterBy)
       dispatch({ type: 'SET_CONTACTS', contacts })
     } catch (err) {

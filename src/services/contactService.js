@@ -42,9 +42,10 @@ function getEmpty() {
 }
 
 function filter(filterBy, contacts) {
-  let { name, email, phone } = filterBy
   return contacts.filter((contact) => {
-    return contact.name.toLowerCase().includes(name.toLowerCase()) && contact.email.toLowerCase().includes(email.toLowerCase()) && contact.phone.includes(phone)
+    let isMatch = true
+    Object.entries(filterBy).forEach(([key, value]) => (isMatch = isMatch && contact[key].toLowerCase().includes(value.toLowerCase())))
+    return isMatch
   })
 }
 

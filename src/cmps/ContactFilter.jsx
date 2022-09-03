@@ -1,24 +1,36 @@
 import { Component } from 'react'
+import { FormTemplate } from '../cmps/FormTemplate'
 
 export class ContactFilter extends Component {
   state = {
-    name: '',
-    email: '',
-    phone: '',
+    // name: '',
+    // email: '',
+    // phone: '',
+    // filterBy: '',
   }
 
-  handleChange = ({ target }) => {
-    const field = target.name
-    const value = target.type === 'number' ? +target.value || '' : target.value
-    this.setState({ [field]: value }, () => {
-      this.props.onChangeFilter({ ...this.state })
-    })
-  }
+  // handleChange = ({ target }) => {
+  //   const field = target.name
+  //   const value = target.type === 'number' ? +target.value || '' : target.value
+  //   this.setState({ [field]: value }, () => {
+  //     this.props.onChangeFilter({ ...this.state })
+  //   })
+  // }
 
   render() {
-    const { name, email, phone } = this.state
+    const onChange = this.props.onChangeFilter
+    // const onSubmit = utilService.onSubmit
+    // this.props.onChangeFilter({ ...this.state })
+    const selectedFormFields = ['name', 'email', 'phone']
+    const onSubmit = { action: null, forHtml: '' }
+    const value = { ...this.state }
+
+    // const { name, email, phone } = this.state
     return (
-      <form className="contact-filter">
+      <section>
+        <FormTemplate value={value} className="contact-filter" selectedFormFields={selectedFormFields} onSubmit={onSubmit} onChange={onChange} />
+      </section>
+      /* <form className="contact-filter">
         <section>
           <label htmlFor="name">Name</label>
           <input value={name} onChange={this.handleChange} type="text" name="name" id="name" placeholder="Search name..." />
@@ -31,7 +43,7 @@ export class ContactFilter extends Component {
           <label htmlFor="phone">Phone</label>
           <input value={phone} onChange={this.handleChange} type="number" name="phone" id="phone" placeholder="Search phone..." />
         </section>
-      </form>
+      </form> */
     )
   }
 }

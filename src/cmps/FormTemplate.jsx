@@ -12,25 +12,23 @@ export class FormTemplate extends Component {
   }
 
   render() {
-    const { selectedFormFields, onSubmit, onChange } = this.props
+    const { selectedFormFields, onSubmit, onChange, className, value } = this.props
     const { formFields } = this.state
     if (!formFields) return <div>Loading...</div>
     return (
-      <section>
-        <form onSubmit={onSubmit.action}>
-          {formFields.map((field) => {
-            if (selectedFormFields.find((selectedField) => selectedField === field.name)) {
-              return (
-                <div key={field.name}>
-                  <label htmlFor={field.name}>{field.forHtml}</label>
-                  <input onChange={onChange} type="text" name={field.name} placeholder={field.placeholder} id={field.name} />
-                </div>
-              )
-            } else return ''
-          })}
-          <button>{onSubmit.forHtml}</button>
-        </form>
-      </section>
+      <form onSubmit={onSubmit.action} className={className}>
+        {formFields.map((field) => {
+          if (selectedFormFields.find((selectedField) => selectedField === field.name)) {
+            return (
+              <div key={field.name}>
+                <label htmlFor={field.name}>{field.forHtml}</label>
+                <input value={value ? value[field.name] : undefined} onChange={onChange} type={field.type} name={field.name} placeholder={field.placeholder} id={field.name} />
+              </div>
+            )
+          } else return ''
+        })}
+        {onSubmit.action ? <button>{onSubmit.forHtml}</button> : ''}
+      </form>
     )
   }
 }

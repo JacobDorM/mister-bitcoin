@@ -38,11 +38,16 @@ function sortBy(arr, field) {
   })
 }
 
-function onChange(event, thisComp, entity) {
+async function onChange(event, thisComp, entity) {
   const { target } = event
   const field = target.name
   const value = target.type === 'number' ? +target.value || '' : target.value
-  thisComp.setState((prevState) => ({ [entity]: { ...prevState[entity], [field]: value } }))
+  thisComp.setState(
+    (prevState) => ({ [entity]: { ...prevState[entity], [field]: value } })
+    // () => {
+    //   console.log({ ...thisComp.state })
+    // }
+  )
 }
 
 function onSubmit(event, thisComp, action, entity) {
