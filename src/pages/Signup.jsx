@@ -7,7 +7,8 @@ import { login, signup } from '../store/actions/authActions'
 
 export class _Signup extends Component {
   state = {
-    user: null,
+    signupUser: null,
+    loginUser: null,
   }
 
   async componentDidMount() {
@@ -20,14 +21,14 @@ export class _Signup extends Component {
     const onSubmit = utilService.onSubmit
 
     const selectedFormFields = ['fullname', 'username', 'password']
-    const onSubmitSignup = { action: (e) => onSubmit(e, this, 'signup', 'user'), forHtml: 'Signup' }
-    const onSubmitLogin = { action: (e) => onSubmit(e, this, 'login', 'user'), forHtml: 'Login' }
+    const onSubmitSignup = { action: (e) => onSubmit(e, this, 'signup', 'signupUser'), forHtml: 'Signup' }
+    const onSubmitLogin = { action: (e) => onSubmit(e, this, 'login', 'loginUser'), forHtml: 'Login' }
 
     return (
       <section>
-        <FormTemplate selectedFormFields={selectedFormFields} onSubmit={onSubmitSignup} onChange={(e) => onChange(e, this, 'user')} />
+        <FormTemplate value={this.state.signupUser} selectedFormFields={selectedFormFields} onSubmit={onSubmitSignup} onChange={(e) => onChange(e, this, 'signupUser')} />
         <div>Or</div>
-        <FormTemplate selectedFormFields={selectedFormFields} onSubmit={onSubmitLogin} onChange={(e) => onChange(e, this, 'user')} />
+        <FormTemplate value={this.state.loginUser} selectedFormFields={selectedFormFields} onSubmit={onSubmitLogin} onChange={(e) => onChange(e, this, 'loginUser')} />
       </section>
     )
   }
