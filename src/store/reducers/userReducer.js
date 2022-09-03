@@ -28,13 +28,6 @@ export function userReducer(state = INITIAL_STATE, action) {
         users: state.users.map((user) => (user._id === action.user._id ? action.user : user)),
       }
 
-    case 'SPEND_BALANCE':
-      const { loggedInUser } = state
-      return {
-        ...state,
-        loggedInUser: { ...loggedInUser, balance: loggedInUser.balance - action.amount },
-      }
-
     default:
       return state
   }

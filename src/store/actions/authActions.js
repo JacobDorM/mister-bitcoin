@@ -12,6 +12,16 @@ export function getLoggedInUser() {
   }
 }
 
+export function saveLoggedInUser(loggedInUser) {
+  return async (dispatch, getState) => {
+    try {
+      await authService.save(loggedInUser)
+    } catch (err) {
+      console.log(`couldn't getLoggedInUser: ${err}`)
+    }
+  }
+}
+
 export function login(user) {
   return async (dispatch, getState) => {
     try {
@@ -42,5 +52,11 @@ export function signup(user) {
     } catch (err) {
       console.log(`couldn't signup: ${err}`)
     }
+  }
+}
+
+export function spendCoins(amount) {
+  return async (dispatch) => {
+    dispatch({ type: 'SPEND_COINS', amount })
   }
 }

@@ -71,11 +71,3 @@ async function _createUsers() {
   }
   return users
 }
-
-// async function getLoggedInUser() {
-//   return {
-//     name: 'Dominique Sote',
-//     coins: 200,
-//     moves: [],
-//   }
-// }

@@ -16,6 +16,13 @@ export function authReducer(state = INITIAL_STATE, action) {
         loggedInUser: null,
       }
 
+    case 'SPEND_COINS':
+      const { loggedInUser } = state
+      return {
+        ...state,
+        loggedInUser: { ...loggedInUser, coins: loggedInUser.coins - action.amount },
+      }
+
     default:
       return state
   }

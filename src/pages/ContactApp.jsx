@@ -5,8 +5,9 @@ import { NiceButton } from '../cmps/NiceButton'
 import { ContactFilter } from '../cmps/ContactFilter'
 import { ContactList } from '../cmps/ContactList'
 import { utilService } from '../services/utilService'
-import { loadContacts, removeContact, setFilterBy } from '../store/actions/contactActions'
-import { spendBalance } from '../store/actions/userActions'
+import { loadContacts, removeContact, setFilterBy, saveContact } from '../store/actions/contactActions'
+import { spendCoins, saveLoggedInUser } from '../store/actions/authActions'
+import { saveUser } from '../store/actions/userActions'
 
 class _ContactApp extends Component {
   state = {
@@ -27,8 +28,10 @@ class _ContactApp extends Component {
     await this.props.loadContacts()
   }
 
-  onSpendBalance = () => {
-    this.props.spendBalance(5)
+  onSpendCoins = async () => {
+    await this.props.spendCoins(5)
+    await this.props.saveLoggedInUser(this.props.loggedInUser)
+    await this.props.saveUser(this.props.loggedInUser)
   }
 
   render() {
@@ -45,8 +48,8 @@ class _ContactApp extends Component {
         <NiceButton Icon={Icon} className="nice-button" onClick={() => console.log('nice button clicked')}>
           <TextCmp />
         </NiceButton>
-        <NiceButton Icon={() => '💰'} className="nice-button" onClick={this.onSpendBalance}>
-          Spend Balance
+        <NiceButton Icon={() => '💰'} className="nice-button" onClick={this.onSpendCoins}>
+          Spend Coins
         </NiceButton>
       </div>
     )
@@ -57,6 +60,7 @@ const mapStateToProps = (state) => {
   return {
     contacts: state.contactModule.contacts,
     filterBy: state.contactModule.filterBy,
+    loggedInUser: state.authModule.loggedInUser,
   }
 }
 
@@ -64,7 +68,10 @@ const mapDispatchToProps = {
   loadContacts,
   removeContact,
   setFilterBy,
-  spendBalance,
+  spendCoins,
+  saveContact,
+  saveUser,
+  saveLoggedInUser,
 }
 
 export const ContactApp = connect(mapStateToProps, mapDispatchToProps)(_ContactApp)

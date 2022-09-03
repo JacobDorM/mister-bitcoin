@@ -4,6 +4,7 @@ export const authService = {
   login,
   getLoggedInUser,
   logout,
+  save,
 }
 
 const STORAGE_KEY_LOGGEDIN_USER = 'loggedInUser'
@@ -23,7 +24,7 @@ async function login(userInfo) {
     if (!userInfo.username || !userInfo.password) return Promise.reject('Missing required login information')
     const user = await userService.getByUsername(userInfo.username)
     if (user && user.password === userInfo.password) {
-      return _saveLocalUser(user)
+      return save(user)
     } else return Promise.reject('Username or password is inncorect')
   } catch (err) {
     console.log(`couldn't login: ${err}`)
@@ -46,7 +47,7 @@ async function logout() {
   }
 }
 
-function _saveLocalUser(user) {
+function save(user) {
   try {
     sessionStorage.setItem(STORAGE_KEY_LOGGEDIN_USER, JSON.stringify(user))
     return user

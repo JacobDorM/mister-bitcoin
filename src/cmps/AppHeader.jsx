@@ -9,7 +9,7 @@ function _AppHeader({ loggedInUser, history }) {
         {loggedInUser ? (
           <section className="user">
             <p>Name: {loggedInUser.fullname}</p>
-            <p>Balance: {loggedInUser.coins}</p>
+            <p>Coins: {loggedInUser.coins}</p>
           </section>
         ) : (
           ''
