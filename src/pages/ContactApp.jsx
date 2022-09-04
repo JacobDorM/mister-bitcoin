@@ -5,7 +5,7 @@ import { NiceButton } from '../cmps/NiceButton'
 import { ContactFilter } from '../cmps/ContactFilter'
 import { ContactList } from '../cmps/ContactList'
 import { utilService } from '../services/utilService'
-import { loadContacts, removeContact, setFilterBy, saveContact } from '../store/actions/contactActions'
+import { loadContacts, removeContact, setFilterBy } from '../store/actions/contactActions'
 import { spendCoins, saveLoggedInUser } from '../store/actions/authActions'
 import { saveUser } from '../store/actions/userActions'
 
@@ -39,11 +39,11 @@ class _ContactApp extends Component {
     if (!contacts) return <div>Loading...</div>
     const TextCmp = () => <span>Nice Button</span>
     const Icon = () => '🍇'
-
+    // to="/contact/edit"
     return (
       <div className="contact-app">
         <ContactFilter onChangeFilter={this.onChangeFilter} />
-        <Link to="/contact/edit">Add Contact</Link>
+        <Link to={'/contact/edit'}>Add Contact</Link>
         <ContactList history={this.props.history} onRemoveContact={this.onRemoveContact} contacts={contacts} />
         <NiceButton Icon={Icon} className="nice-button" onClick={() => console.log('nice button clicked')}>
           <TextCmp />
@@ -59,6 +59,7 @@ class _ContactApp extends Component {
 const mapStateToProps = (state) => {
   return {
     contacts: state.contactModule.contacts,
+    contact: state.contactModule.contact,
     filterBy: state.contactModule.filterBy,
     loggedInUser: state.authModule.loggedInUser,
   }
@@ -69,7 +70,6 @@ const mapDispatchToProps = {
   removeContact,
   setFilterBy,
   spendCoins,
-  saveContact,
   saveUser,
   saveLoggedInUser,
 }

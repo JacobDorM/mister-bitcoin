@@ -4,7 +4,6 @@ export function loadContacts() {
   return async (dispatch, getState) => {
     try {
       const { filterBy } = getState().contactModule
-      console.log(filterBy)
       const contacts = await contactService.query(filterBy)
       dispatch({ type: 'SET_CONTACTS', contacts })
     } catch (err) {
@@ -16,9 +15,18 @@ export function loadContacts() {
 export function loadContact(contactId) {
   return async (dispatch, getState) => {
     try {
-      const contact = await contactService.getById(contactId)
+      const contact = contactId ? await contactService.getById(contactId) : await contactService.getEmpty()
       dispatch({ type: 'SET_CONTACT', contact })
-      return contact
+    } catch (err) {
+      console.log('err:', err)
+    }
+  }
+}
+
+export function setContact(contact) {
+  return async (dispatch, getState) => {
+    try {
+      dispatch({ type: 'SET_CONTACT', contact })
     } catch (err) {
       console.log('err:', err)
     }
@@ -41,7 +49,7 @@ export function saveContact(contact) {
   return async (dispatch, getState) => {
     try {
       const savedContact = await contactService.save(contact)
-      contact.id ? dispatch({ type: 'UPDATE_CONTACT', savedContact }) : dispatch({ type: 'UPDATE_CONTACT', savedContact })
+      contact.id ? dispatch({ type: 'UPDATE_CONTACT', savedContact }) : dispatch({ type: 'ADD_CONTACT', savedContact })
     } catch (err) {
       console.log('err:', err)
     }

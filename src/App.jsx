@@ -1,4 +1,4 @@
-import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import { ContactApp } from './pages/ContactApp'
@@ -10,10 +10,11 @@ import { Home } from './pages/Home'
 import { Statistics } from './pages/Statistics'
 import { Signup } from './pages/Signup'
 import { getLoggedInUser } from './store/actions/authActions'
+import { utilService } from './services/utilService'
+import { setContact, saveContact } from './store/actions/contactActions'
 
 const PrivateRoute = (props) => {
   const isAdmin = true
-  // return isAdmin ? <Route path={props.path} component={props.component} /> : <Redirect to='/' />
   return isAdmin ? <Route {...props} /> : <Redirect to="/contacts" />
 }
 
@@ -28,33 +29,45 @@ const NotLoggedInUserRoute = (props) => {
 }
 
 class _App extends Component {
+  state = {
+    contact: this.props.contact,
+  }
+
   async componentDidMount() {
     this.props.getLoggedInUser()
+  }
+
+  onChangeContact = async (e) => {
+    await utilService.onChange(e, this, 'contact')
+    await this.props.setContact(this.state.contact)
+  }
+
+  onSubmitContact = async (e) => {
+    await utilService.onSubmit(e, this, 'saveContact', 'contact')
+    this.props.history.push('/contacts')
   }
 
   render() {
     const { loggedInUser } = this.props
 
     return (
-      <Router>
-        <div className="main-app">
-          <AppHeader />
-          <main className="container">
-            <Switch>
-              <Route path="/contact/edit/:id?" component={ContactEdit} />
-              <PrivateRoute path="/contact/:id" component={ContactDetails} />
-              <LoggedInUserRoute path="/about" component={About} loggedInUser={loggedInUser} />
-              <LoggedInUserRoute path="/contacts" component={ContactApp} loggedInUser={loggedInUser} />
-              <NotLoggedInUserRoute path="/signup" component={Signup} loggedInUser={loggedInUser} />
-              <LoggedInUserRoute path="/statistics" component={Statistics} loggedInUser={loggedInUser} />
-              <LoggedInUserRoute path="/" component={Home} match={'a'} loggedInUser={loggedInUser} />
-            </Switch>
-          </main>
-          <footer>
-            <section className="container">contactRights 2022 &copy;</section>
-          </footer>
-        </div>
-      </Router>
+      <div className="main-app">
+        <AppHeader />
+        <main className="container">
+          <Switch>
+            <Route path="/contact/edit/:id?" render={(props) => <ContactEdit {...props} onSubmitContact={this.onSubmitContact} onChange={this.onChangeContact} />} />
+            <PrivateRoute path="/contact/:id" component={ContactDetails} />
+            <LoggedInUserRoute path="/about" component={About} loggedInUser={loggedInUser} />
+            <LoggedInUserRoute path="/contacts" component={ContactApp} loggedInUser={loggedInUser} />
+            <NotLoggedInUserRoute path="/signup" component={Signup} loggedInUser={loggedInUser} />
+            <LoggedInUserRoute path="/statistics" component={Statistics} loggedInUser={loggedInUser} />
+            <LoggedInUserRoute path="/" component={Home} match={'a'} loggedInUser={loggedInUser} />
+          </Switch>
+        </main>
+        <footer>
+          <section className="container">contactRights 2022 &copy;</section>
+        </footer>
+      </div>
     )
   }
 }
@@ -67,6 +80,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
   getLoggedInUser,
+  setContact,
+  saveContact,
 }
 
-export const App = connect(mapStateToProps, mapDispatchToProps)(_App)
+export const App = connect(mapStateToProps, mapDispatchToProps)(withRouter(_App))

@@ -39,7 +39,6 @@ export function saveUser(user, isAdmin) {
   return async (dispatch, getState) => {
     try {
       const savedUser = await userService.save(user)
-      console.log('user added')
       if (isAdmin) user.id ? dispatch({ type: 'UPDATE_USER', savedUser }) : dispatch({ type: 'ADD_USER', savedUser })
     } catch (err) {
       console.log('err:', err)

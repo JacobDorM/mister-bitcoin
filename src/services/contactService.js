@@ -33,7 +33,7 @@ function save(contact) {
   else return storageService.post(CONTACTS_KEY, contact)
 }
 
-function getEmpty() {
+async function getEmpty() {
   return {
     name: '',
     email: '',
