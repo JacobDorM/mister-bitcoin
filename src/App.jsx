@@ -11,7 +11,7 @@ import { Statistics } from './pages/Statistics'
 import { Signup } from './pages/Signup'
 import { getLoggedInUser } from './store/actions/authActions'
 import { utilService } from './services/utilService'
-import { setContact, saveContact } from './store/actions/contactActions'
+import { setContact, saveContact, loadContacts } from './store/actions/contactActions'
 
 const PrivateRoute = (props) => {
   const isAdmin = true
@@ -38,12 +38,14 @@ class _App extends Component {
   }
 
   onChangeContact = async (e) => {
+    this.setState({ contact: this.props.contact })
     await utilService.onChange(e, this, 'contact')
     await this.props.setContact(this.state.contact)
   }
 
   onSubmitContact = async (e) => {
     await utilService.onSubmit(e, this, 'saveContact', 'contact')
+    await this.props.loadContacts()
     this.props.history.push('/contacts')
   }
 
@@ -75,6 +77,7 @@ class _App extends Component {
 const mapStateToProps = (state) => {
   return {
     loggedInUser: state.authModule.loggedInUser,
+    contact: state.contactModule.contact,
   }
 }
 
@@ -82,6 +85,7 @@ const mapDispatchToProps = {
   getLoggedInUser,
   setContact,
   saveContact,
+  loadContacts,
 }
 
 export const App = connect(mapStateToProps, mapDispatchToProps)(withRouter(_App))
