@@ -12,8 +12,8 @@ export class _Signup extends Component {
   }
 
   async componentDidMount() {
-    const user = await userService.getEmpty()
-    this.setState({ user })
+    const signupUser = await userService.getEmpty()
+    this.setState({ signupUser })
   }
 
   render() {

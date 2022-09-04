@@ -46,7 +46,7 @@ async function onChange(event, thisComp, entity) {
   thisComp.setState((prevState) => ({ [entity]: { ...prevState[entity], [field]: value } }))
 }
 
-function onSubmit(event, thisComp, action, entity) {
+async function onSubmit(event, thisComp, action, entity) {
   event.preventDefault()
   thisComp.props[action]({ ...thisComp.state[entity] })
 }
