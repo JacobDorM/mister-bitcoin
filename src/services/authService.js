@@ -5,6 +5,8 @@ export const authService = {
   getLoggedInUser,
   logout,
   save,
+  addMove,
+  spendCoins,
 }
 
 const STORAGE_KEY_LOGGEDIN_USER = 'loggedInUser'
@@ -24,7 +26,7 @@ async function login(userInfo) {
     if (!userInfo.username || !userInfo.password) return Promise.reject('Missing required login information')
     const user = await userService.getByUsername(userInfo.username)
     if (user && user.password === userInfo.password) {
-      return save(user)
+      return user
     } else return Promise.reject('Username or password is inncorect')
   } catch (err) {
     console.log(`couldn't login: ${err}`)
@@ -50,8 +52,20 @@ async function logout() {
 function save(user) {
   try {
     sessionStorage.setItem(STORAGE_KEY_LOGGEDIN_USER, JSON.stringify(user))
-    return user
+    // return user
   } catch (err) {
     console.log(`can't save loggInUser to session: ${err}`)
   }
+}
+
+function spendCoins(loggedInUser, amount) {
+  if (loggedInUser.coins - amount >= 0) {
+    loggedInUser.coins -= amount
+    return loggedInUser
+  } else return Promise.reject("loggedInUser doesn't have enough coins")
+}
+
+async function addMove(loggedInUser, move) {
+  loggedInUser.moves.push(move)
+  return loggedInUser
 }

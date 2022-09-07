@@ -2,7 +2,6 @@ import { utilService } from './utilService'
 import { storageService } from './async-storage-service.js'
 
 export const userService = {
-  addMove,
   getByUsername,
   query,
   remove,
@@ -13,10 +12,6 @@ export const userService = {
 const USERS_KEY = 'users'
 
 _createUsers()
-
-function addMove(contact, amount) {
-  return
-}
 
 async function getEmpty() {
   return { _id: '', fullname: '', username: '', password: '', coins: 100, moves: [] }

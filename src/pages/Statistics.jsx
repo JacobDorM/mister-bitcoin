@@ -5,7 +5,7 @@ import { Chart } from '../cmps/Chart'
 export class Statistics extends Component {
   state = {
     bitcoinCharts: null,
-    type: 'n-transactions',
+    type: 'market-price',
     // market-price
     // n-transactions
   }

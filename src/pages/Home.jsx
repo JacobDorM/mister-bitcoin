@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import { bitcoinService } from '../services/bitcoinService'
-import { getLoggedInUser, logout } from '../store/actions/authActions'
+import { logout } from '../store/actions/authActions'
 import { utilService } from '../services/utilService'
 
 class _Home extends Component {
@@ -10,7 +10,6 @@ class _Home extends Component {
   }
 
   async componentDidMount() {
-    await this.props.getLoggedInUser()
     await this.getBitcoinRate()
   }
 
@@ -47,7 +46,6 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-  getLoggedInUser,
   logout,
 }
 

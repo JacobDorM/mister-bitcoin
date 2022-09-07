@@ -9,7 +9,7 @@ import { ContactEdit } from './pages/ContactEdit'
 import { Home } from './pages/Home'
 import { Statistics } from './pages/Statistics'
 import { Signup } from './pages/Signup'
-import { getLoggedInUser } from './store/actions/authActions'
+import { getLoggedInUser, addMove } from './store/actions/authActions'
 import { utilService } from './services/utilService'
 import { setContact, saveContact, loadContacts } from './store/actions/contactActions'
 
@@ -31,10 +31,21 @@ const NotLoggedInUserRoute = (props) => {
 class _App extends Component {
   state = {
     contact: this.props.contact,
+    funds: null,
   }
 
   async componentDidMount() {
     this.props.getLoggedInUser()
+  }
+
+  onTransferCoins = async (e) => {
+    e.preventDefault()
+    this.props.addMove(this.props.loggedInUser, this.props.contact, this.state.funds.amount)
+    this.props.history.push('/contacts')
+  }
+
+  onChangefunds = async (e) => {
+    await utilService.onChange(e, this, 'funds')
   }
 
   onChangeContact = async (e) => {
@@ -58,7 +69,7 @@ class _App extends Component {
         <main className="container">
           <Switch>
             <Route path="/contact/edit/:id?" render={(props) => <ContactEdit {...props} onSubmitContact={this.onSubmitContact} onChange={this.onChangeContact} />} />
-            <PrivateRoute path="/contact/:id" component={ContactDetails} />
+            <PrivateRoute path="/contact/:id" render={(props) => <ContactDetails {...props} onTransferCoins={this.onTransferCoins} onChangefunds={this.onChangefunds} funds={this.state.funds} />} />
             <LoggedInUserRoute path="/about" component={About} loggedInUser={loggedInUser} />
             <LoggedInUserRoute path="/contacts" component={ContactApp} loggedInUser={loggedInUser} />
             <NotLoggedInUserRoute path="/signup" component={Signup} loggedInUser={loggedInUser} />
@@ -86,6 +97,7 @@ const mapDispatchToProps = {
   setContact,
   saveContact,
   loadContacts,
+  addMove,
 }
 
 export const App = connect(mapStateToProps, mapDispatchToProps)(withRouter(_App))

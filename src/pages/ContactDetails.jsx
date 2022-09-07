@@ -1,26 +1,14 @@
 import { Component } from 'react'
+import { connect } from 'react-redux'
 // import { Link } from 'react-router-dom'
-import { contactService } from '../services/contactService'
+// import { contactService } from '../services/contactService'
+import { loadContact } from '../store/actions/contactActions'
+import { TransferFund } from '../cmps/TransferFund'
 
-export class ContactDetails extends Component {
-  state = {
-    contact: null,
-  }
-
-  componentDidMount() {
-    this.loadContact()
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.match.params.id !== this.props.match.params.id) {
-      this.loadContact()
-    }
-  }
-
-  async loadContact() {
+class _ContactDetails extends Component {
+  async componentDidMount() {
     const contactId = this.props.match.params.id
-    const contact = await contactService.getById(contactId)
-    this.setState({ contact })
+    await this.props.loadContact(contactId)
   }
 
   onBack = () => {
@@ -29,7 +17,7 @@ export class ContactDetails extends Component {
   }
 
   render() {
-    const { contact } = this.state
+    const { contact, onTransferCoins, onChangefunds, funds } = this.props
     if (!contact) return <div>Loading...</div>
     return (
       <div className="contact-details">
@@ -43,7 +31,20 @@ export class ContactDetails extends Component {
         <img src={`https://robohash.org/${contact._id}`} alt="" />
         <button onClick={this.onBack}>Back</button>
         {/* <Link to="/contact/r3">Next Contact</Link> */}
+        <TransferFund contact={contact} onTransferCoins={onTransferCoins} onChange={onChangefunds} value={funds} />
       </div>
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    contact: state.contactModule.contact,
+  }
+}
+
+const mapDispatchToProps = {
+  loadContact,
+}
+
+export const ContactDetails = connect(mapStateToProps, mapDispatchToProps)(_ContactDetails)

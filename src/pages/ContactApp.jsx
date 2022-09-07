@@ -6,8 +6,7 @@ import { ContactFilter } from '../cmps/ContactFilter'
 import { ContactList } from '../cmps/ContactList'
 import { utilService } from '../services/utilService'
 import { loadContacts, removeContact, setFilterBy } from '../store/actions/contactActions'
-import { spendCoins, saveLoggedInUser } from '../store/actions/authActions'
-import { saveUser } from '../store/actions/userActions'
+import { spendCoins } from '../store/actions/authActions'
 
 class _ContactApp extends Component {
   state = {
@@ -29,9 +28,7 @@ class _ContactApp extends Component {
   }
 
   onSpendCoins = async () => {
-    await this.props.spendCoins(5)
-    await this.props.saveLoggedInUser(this.props.loggedInUser)
-    await this.props.saveUser(this.props.loggedInUser)
+    await this.props.spendCoins(this.props.loggedInUser, 5)
   }
 
   render() {
@@ -70,8 +67,6 @@ const mapDispatchToProps = {
   removeContact,
   setFilterBy,
   spendCoins,
-  saveUser,
-  saveLoggedInUser,
 }
 
 export const ContactApp = connect(mapStateToProps, mapDispatchToProps)(_ContactApp)
