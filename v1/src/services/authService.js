@@ -52,7 +52,6 @@ async function logout() {
 function save(user) {
   try {
     sessionStorage.setItem(STORAGE_KEY_LOGGEDIN_USER, JSON.stringify(user))
-    // return user
   } catch (err) {
     console.log(`can't save loggInUser to session: ${err}`)
   }

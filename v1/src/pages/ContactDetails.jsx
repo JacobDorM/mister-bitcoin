@@ -1,10 +1,8 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
-// import { Link } from 'react-router-dom'
-// import { contactService } from '../services/contactService'
 import { loadContact } from '../store/actions/contactActions'
 import { TransferFund } from '../cmps/TransferFund'
-
+import { MoveList } from '../cmps/MoveList'
 class _ContactDetails extends Component {
   async componentDidMount() {
     const contactId = this.props.match.params.id
@@ -17,8 +15,10 @@ class _ContactDetails extends Component {
   }
 
   render() {
-    const { contact, onTransferCoins, onChangefunds, funds } = this.props
-    if (!contact) return <div>Loading...</div>
+    const { contact, onTransferCoins, onChangefunds, funds, loggedInUser } = this.props
+
+    if (!contact || !loggedInUser) return <div>Loading...</div>
+    const moves = loggedInUser.moves.filter((move) => move.to._id === contact._id)
     return (
       <div className="contact-details">
         {Object.entries(contact).map(([key, value]) => {
@@ -32,6 +32,7 @@ class _ContactDetails extends Component {
         <button onClick={this.onBack}>Back</button>
         {/* <Link to="/contact/r3">Next Contact</Link> */}
         <TransferFund contact={contact} onTransferCoins={onTransferCoins} onChange={onChangefunds} value={funds} />
+        <MoveList moves={moves} />
       </div>
     )
   }

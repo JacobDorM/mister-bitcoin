@@ -40,12 +40,11 @@ class _App extends Component {
 
   onTransferCoins = async (e) => {
     e.preventDefault()
-    this.props.addMove(this.props.loggedInUser, this.props.contact, this.state.funds.amount)
-    this.props.history.push('/contacts')
-  }
-
-  onChangefunds = async (e) => {
-    await utilService.onChange(e, this, 'funds')
+    if (this.state.funds) {
+      await this.props.addMove(this.state.funds.amount)
+      this.setState({ funds: null })
+      this.props.history.push('/contacts')
+    }
   }
 
   onChangeContact = async (e) => {
@@ -69,7 +68,7 @@ class _App extends Component {
         <main className="container">
           <Switch>
             <Route path="/contact/edit/:id?" render={(props) => <ContactEdit {...props} onSubmitContact={this.onSubmitContact} onChange={this.onChangeContact} />} />
-            <PrivateRoute path="/contact/:id" render={(props) => <ContactDetails {...props} onTransferCoins={this.onTransferCoins} onChangefunds={this.onChangefunds} funds={this.state.funds} />} />
+            <PrivateRoute path="/contact/:id" render={(props) => <ContactDetails {...props} onTransferCoins={this.onTransferCoins} onChangefunds={async (e) => await utilService.onChange(e, this, 'funds')} funds={this.state.funds} loggedInUser={loggedInUser} />} />
             <LoggedInUserRoute path="/about" component={About} loggedInUser={loggedInUser} />
             <LoggedInUserRoute path="/contacts" component={ContactApp} loggedInUser={loggedInUser} />
             <NotLoggedInUserRoute path="/signup" component={Signup} loggedInUser={loggedInUser} />

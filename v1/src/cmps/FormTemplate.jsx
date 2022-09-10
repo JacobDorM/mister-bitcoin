@@ -22,7 +22,7 @@ export class FormTemplate extends Component {
             return (
               <div key={field.name}>
                 <label htmlFor={field.name}>{field.forHtml}</label>
-                <input value={value && value[field.name] ? value[field.name] : ''} onChange={onChange} type={field.type} name={field.name} placeholder={field.placeholder} id={field.name} />
+                <input value={value && value[field.name] ? value[field.name] : ''} onChange={onChange} type={field.type} name={field.name} placeholder={field.placeholder} id={field.name} min={field.min} />
               </div>
             )
           } else return ''

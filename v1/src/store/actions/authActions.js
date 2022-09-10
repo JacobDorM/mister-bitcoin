@@ -3,7 +3,7 @@ import { saveUser } from './userActions'
 import { saveMove } from './moveActions'
 
 export function getLoggedInUser() {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     try {
       const loggedInUser = await authService.getLoggedInUser()
       dispatch({ type: 'SET_LOGGED_IN_USER', loggedInUser })
@@ -69,10 +69,18 @@ export function spendCoins(loggedInUser, amount) {
   }
 }
 
-export function addMove(loggedInUser, contact, amount) {
-  return async (dispatch) => {
-    const move = await dispatch(saveMove(loggedInUser, contact, amount))
-    loggedInUser = await authService.addMove(loggedInUser, move)
-    dispatch(spendCoins(loggedInUser, amount))
+export function addMove(amount) {
+  return async (dispatch, getState) => {
+    try {
+      const { contact } = getState().contactModule
+      let { loggedInUser } = getState().authModule
+      if (loggedInUser.coins - amount >= 0 && amount) {
+        const move = await dispatch(saveMove(loggedInUser, contact, amount))
+        loggedInUser = await authService.addMove(loggedInUser, move)
+        dispatch(spendCoins(loggedInUser, amount))
+      } else return Promise.reject("you Does't have enough coins or didnt choose amount of coins")
+    } catch (err) {
+      console.log(`couldn't addMove: ${err}`)
+    }
   }
 }

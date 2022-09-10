@@ -2,8 +2,6 @@ import { Component } from 'react'
 import { Sparklines, SparklinesBars } from 'react-sparklines'
 
 export class Chart extends Component {
-  state = {}
-
   render() {
     const { bitcoinCharts } = this.props
     let charts = JSON.parse(JSON.stringify(bitcoinCharts))

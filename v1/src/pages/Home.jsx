@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { bitcoinService } from '../services/bitcoinService'
 import { logout } from '../store/actions/authActions'
 import { utilService } from '../services/utilService'
+import { MoveList } from '../cmps/MoveList'
 
 class _Home extends Component {
   state = {
@@ -25,16 +26,26 @@ class _Home extends Component {
 
   render() {
     const onSubmit = utilService.onSubmit
+
     const { loggedInUser } = this.props
     const { bRate } = this.state
+
+    const lastMoves = 3
+    const moves = loggedInUser.moves.slice(-lastMoves)
+
     if (!loggedInUser) return <div>Loading...</div>
     return (
-      <section className="home">
-        <div>Welcome {loggedInUser.username}!</div>
-        <div>You have {loggedInUser.coins} coins</div>
-        <div>BTC: {bRate}</div>
-        <button onClick={(e) => onSubmit(e, this, 'logout')}>Logout</button>
-      </section>
+      <main>
+        <section className="home">
+          <div>Welcome {loggedInUser.username}!</div>
+          <div>You have {loggedInUser.coins} coins</div>
+          <div>BTC: {bRate}</div>
+          <button onClick={(e) => onSubmit(e, this, 'logout')}>Logout</button>
+        </section>
+        <section>
+          <MoveList moves={moves} lastMoves={lastMoves} />
+        </section>
+      </main>
     )
   }
 }
