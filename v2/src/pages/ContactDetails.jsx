@@ -1,23 +1,20 @@
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { loadContact } from '../store/actions/contactActions'
 import { TransferFund } from '../cmps/TransferFund'
 import { MoveList } from '../cmps/MoveList'
 
-const _ContactDetails = (props) => {
+export const ContactDetails = (props) => {
   let params = useParams()
+  const { contact } = useSelector((state) => state.contactModule)
+  const dispatch = useDispatch()
 
-  const { contact, onTransferCoins, onChangefunds, funds, loggedInUser } = props
+  const { onTransferCoins, onChangefunds, funds, loggedInUser } = props
 
   useEffect(() => {
-    loadContact(params.id)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.id])
-
-  const loadContact = async (contactId) => {
-    await props.loadContact(contactId)
-  }
+    dispatch(loadContact(params.id))
+  }, [params.id, dispatch])
 
   const onBack = () => {
     props.history.push('/contacts')
@@ -43,15 +40,3 @@ const _ContactDetails = (props) => {
     </div>
   )
 }
-
-const mapStateToProps = (state) => {
-  return {
-    contact: state.contactModule.contact,
-  }
-}
-
-const mapDispatchToProps = {
-  loadContact,
-}
-
-export const ContactDetails = connect(mapStateToProps, mapDispatchToProps)(_ContactDetails)

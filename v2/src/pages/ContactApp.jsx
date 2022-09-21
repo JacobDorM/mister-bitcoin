@@ -10,7 +10,7 @@ import { spendCoins } from '../store/actions/authActions'
 
 class _ContactApp extends Component {
   state = {
-    filterBy: this.props.filterBy,
+    filterBy: null,
   }
 
   async componentDidMount() {
@@ -57,7 +57,6 @@ const mapStateToProps = (state) => {
   return {
     contacts: state.contactModule.contacts,
     contact: state.contactModule.contact,
-    filterBy: state.contactModule.filterBy,
     loggedInUser: state.authModule.loggedInUser,
   }
 }

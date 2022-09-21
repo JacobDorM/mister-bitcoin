@@ -1,7 +1,10 @@
-import { connect } from 'react-redux'
-import { NavLink, withRouter } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { NavLink, useHistory } from 'react-router-dom'
 
-const _AppHeader = ({ loggedInUser, history }) => {
+export const AppHeader = () => {
+  const { loggedInUser } = useSelector((state) => state.authModule)
+  const history = useHistory()
+  
   return (
     <header className="app-header">
       <section className="container">
@@ -29,11 +32,3 @@ const _AppHeader = ({ loggedInUser, history }) => {
     </header>
   )
 }
-
-const mapStateToProps = (state) => {
-  return {
-    loggedInUser: state.authModule.loggedInUser,
-  }
-}
-
-export const AppHeader = connect(mapStateToProps)(withRouter(_AppHeader))

@@ -1,23 +1,21 @@
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { connect } from 'react-redux'
-import { loadContact, loadContacts } from '../store/actions/contactActions'
+import { useDispatch, useSelector } from 'react-redux'
+import { loadContact } from '../store/actions/contactActions'
 import { FormTemplate } from '../cmps/FormTemplate'
 
-const _ContactEdit = (props) => {
+export const ContactEdit = (props) => {
   const params = useParams()
 
-  const loadContact = async (contactId) => {
-    await props.loadContacts()
-    contactId ? await props.loadContact(contactId) : await props.loadContact()
-  }
+  const { contact } = useSelector((state) => state.contactModule)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    loadContact(params.id)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.id])
+    const contactId = params.id
+    dispatch(loadContact(contactId))
+  }, [params.id, dispatch])
 
-  const { contact, onChange, onSubmitContact } = props
+  const { onChange, onSubmitContact } = props
   if (!contact) return <div>Loading...</div>
   const selectedFormFields = ['name', 'email', 'phone']
   const onSubmit = { action: (e) => onSubmitContact(e), forHtml: 'Save' }
@@ -28,16 +26,3 @@ const _ContactEdit = (props) => {
     </section>
   )
 }
-
-const mapStateToProps = (state) => {
-  return {
-    contact: state.contactModule.contact,
-  }
-}
-
-const mapDispatchToProps = {
-  loadContact,
-  loadContacts,
-}
-
-export const ContactEdit = connect(mapStateToProps, mapDispatchToProps)(_ContactEdit)
