@@ -6,31 +6,31 @@ const INITIAL_STATE = {
 
 export function moveReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case 'SET_CONTACTS':
+    case 'SET_MOVES':
       return {
         ...state,
         moves: action.moves,
       }
 
-    case 'SET_CONTACT':
+    case 'SET_MOVE':
       return {
         ...state,
         move: action.move,
       }
 
-    case 'ADD_CONTACT':
+    case 'ADD_MOVE':
       return {
         ...state,
         moves: [...state.moves, action.savedMove],
       }
 
-    case 'REMOVE_CONTACT':
+    case 'REMOVE_MOVE':
       return {
         ...state,
         moves: state.moves.filter((move) => move._id !== action.moveId),
       }
 
-    case 'UPDATE_CONTACT':
+    case 'UPDATE_MOVE':
       return {
         ...state,
         moves: state.moves.map((move) => (move._id === action.savedMove._id ? action.savedMove : move)),
