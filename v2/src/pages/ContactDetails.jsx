@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { loadContact } from '../store/actions/contactActions'
 import { TransferFund } from '../cmps/TransferFund'
@@ -9,6 +9,7 @@ export const ContactDetails = (props) => {
   let params = useParams()
   const { contact } = useSelector((state) => state.contactModule)
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const { onTransferCoins, onChangefunds, funds, loggedInUser } = props
 
@@ -17,8 +18,7 @@ export const ContactDetails = (props) => {
   }, [params.id, dispatch])
 
   const onBack = () => {
-    props.history.push('/contacts')
-    // props.history.goBack()
+    history.push('/contacts')
   }
 
   if (!contact || !loggedInUser) return <div>Loading...</div>

@@ -1,36 +1,33 @@
-import { Component } from 'react'
+import { useState, useEffect } from 'react'
 import { bitcoinService } from '../services/bitcoinService'
 import { Chart } from '../cmps/Chart'
 
-export class Statistics extends Component {
-  state = {
-    bitcoinCharts: null,
-    type: 'market-price',
-    // market-price
-    // n-transactions
-  }
+// Todo: make a dropdown to select marketNames
 
-  componentDidMount() {
-    this.loadBitcoinCharts()
-  }
+export const Statistics = () => {
+  const [bitcoinCharts, setBitcoinCharts] = useState(null)
+  const marketName = 'market-price'
+  // const [marketName, setMarketName] = useState('market-price')
+  // market-price
+  // n-transactions
 
-  async loadBitcoinCharts() {
-    try {
-      const { type } = this.state
-      const bitcoinCharts = await bitcoinService.getBitcoinCharts(type)
-      this.setState({ bitcoinCharts })
-    } catch (err) {
-      console.log('err:', err)
+  useEffect(() => {
+    const loadBitcoinCharts = async () => {
+      try {
+        const bitcoinCharts = await bitcoinService.getBitcoinCharts(marketName)
+        setBitcoinCharts(bitcoinCharts)
+      } catch (err) {
+        console.log('err:', err)
+      }
     }
-  }
 
-  render() {
-    const { bitcoinCharts, type } = this.state
-    if (!bitcoinCharts) return <div>Loading...</div>
-    return (
-      <section className="statistic">
-        <Chart bitcoinCharts={bitcoinCharts} type={type} />
-      </section>
-    )
-  }
+    loadBitcoinCharts()
+  }, [])
+
+  if (!bitcoinCharts) return <div>Loading...</div>
+  return (
+    <section className="statistic">
+      <Chart bitcoinCharts={bitcoinCharts} type={marketName} />
+    </section>
+  )
 }

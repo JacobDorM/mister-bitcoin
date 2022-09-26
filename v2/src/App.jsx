@@ -1,6 +1,6 @@
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
-import { Component } from 'react'
-import { connect } from 'react-redux'
+import { Redirect, Route, Switch, useHistory } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { ContactApp } from './pages/ContactApp'
 import { AppHeader } from './cmps/AppHeader'
 import { About } from './pages/About'
@@ -11,7 +11,7 @@ import { Statistics } from './pages/Statistics'
 import { Signup } from './pages/Signup'
 import { getLoggedInUser, addMove } from './store/actions/authActions'
 import { utilService } from './services/utilService'
-import { setContact, saveContact, loadContacts } from './store/actions/contactActions'
+import { setContact, saveContact } from './store/actions/contactActions'
 
 const PrivateRoute = (props) => {
   const isAdmin = true
@@ -28,75 +28,61 @@ const NotLoggedInUserRoute = (props) => {
   return !loggedInUser ? <Route {...props} /> : <Redirect to="/" />
 }
 
-class _App extends Component {
-  state = {
-    contact: this.props.contact,
-    funds: null,
-  }
+export const App = () => {
+  const [localContact, setLocalContact] = useState(null)
+  const [funds, setFunds] = useState(null)
 
-  async componentDidMount() {
-    this.props.getLoggedInUser()
-  }
+  const { contact } = useSelector((state) => state.contactModule)
+  const { loggedInUser } = useSelector((state) => state.authModule)
 
-  onTransferCoins = async (e) => {
+  const dispatch = useDispatch()
+  const history = useHistory()
+
+  useEffect(() => {
+    dispatch(getLoggedInUser())
+  }, [dispatch])
+
+  const onTransferCoins = async (e) => {
     e.preventDefault()
-    if (this.state.funds) {
-      await this.props.addMove(this.state.funds.amount)
-      this.setState({ funds: null })
-      this.props.history.push('/contacts')
+    if (funds) {
+      await dispatch(addMove(funds.amount))
+      setFunds(null)
+      history.push('/contacts')
     }
   }
 
-  onChangeContact = async (e) => {
-    this.setState({ contact: this.props.contact })
-    await utilService.onChange(e, this, 'contact')
-    await this.props.setContact(this.state.contact)
+  const onChangeContact = async (e) => {
+    setLocalContact(contact)
+    await utilService.hookOnChange(e, setLocalContact)
   }
 
-  onSubmitContact = async (e) => {
-    await utilService.onSubmit(e, this, 'saveContact', 'contact')
-    await this.props.loadContacts()
-    this.props.history.push('/contacts')
+  useEffect(() => {
+    dispatch(setContact(localContact))
+  }, [localContact, dispatch])
+
+  const onSubmitContact = async (e) => {
+    e.preventDefault()
+    await dispatch(saveContact(localContact))
+    history.push('/contacts')
   }
 
-  render() {
-    const { loggedInUser } = this.props
-
-    return (
-      <div className="main-app">
-        <AppHeader />
-        <main className="container">
-          <Switch>
-            <Route path="/contact/edit/:id?" render={(props) => <ContactEdit {...props} onSubmitContact={this.onSubmitContact} onChange={this.onChangeContact} />} />
-            <PrivateRoute path="/contact/:id" render={(props) => <ContactDetails {...props} onTransferCoins={this.onTransferCoins} onChangefunds={async (e) => await utilService.onChange(e, this, 'funds')} funds={this.state.funds} loggedInUser={loggedInUser} />} />
-            <LoggedInUserRoute path="/about" component={About} loggedInUser={loggedInUser} />
-            <LoggedInUserRoute path="/contacts" component={ContactApp} loggedInUser={loggedInUser} />
-            <NotLoggedInUserRoute path="/signup" component={Signup} loggedInUser={loggedInUser} />
-            <LoggedInUserRoute path="/statistics" component={Statistics} loggedInUser={loggedInUser} />
-            <LoggedInUserRoute path="/" component={Home} match={'a'} loggedInUser={loggedInUser} />
-          </Switch>
-        </main>
-        <footer>
-          <section className="container">contactRights 2022 &copy;</section>
-        </footer>
-      </div>
-    )
-  }
+  return (
+    <div className="main-app">
+      <AppHeader />
+      <main className="container">
+        <Switch>
+          <Route path="/contact/edit/:id?" render={(props) => <ContactEdit {...props} onSubmitContact={onSubmitContact} onChange={onChangeContact} />} />
+          <PrivateRoute path="/contact/:id" render={(props) => <ContactDetails {...props} onTransferCoins={onTransferCoins} onChangefunds={async (e) => await utilService.hookOnChange(e, setFunds)} funds={funds} loggedInUser={loggedInUser} />} />
+          <LoggedInUserRoute path="/about" component={About} loggedInUser={loggedInUser} />
+          <LoggedInUserRoute path="/contacts" component={ContactApp} loggedInUser={loggedInUser} />
+          <NotLoggedInUserRoute path="/signup" component={Signup} loggedInUser={loggedInUser} />
+          <LoggedInUserRoute path="/statistics" component={Statistics} loggedInUser={loggedInUser} />
+          <LoggedInUserRoute path="/" component={Home} match={'a'} loggedInUser={loggedInUser} />
+        </Switch>
+      </main>
+      <footer>
+        <section className="container">contactRights 2022 &copy;</section>
+      </footer>
+    </div>
+  )
 }
-
-const mapStateToProps = (state) => {
-  return {
-    loggedInUser: state.authModule.loggedInUser,
-    contact: state.contactModule.contact,
-  }
-}
-
-const mapDispatchToProps = {
-  getLoggedInUser,
-  setContact,
-  saveContact,
-  loadContacts,
-  addMove,
-}
-
-export const App = connect(mapStateToProps, mapDispatchToProps)(withRouter(_App))

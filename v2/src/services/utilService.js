@@ -6,6 +6,8 @@ export const utilService = {
   onChange,
   onSubmit,
   filter,
+  hookOnChange,
+  hookOnSubmit,
 }
 
 function saveToStorage(key, value) {
@@ -46,9 +48,20 @@ async function onChange(event, thisComp, entity) {
   thisComp.setState((prevState) => ({ [entity]: { ...prevState[entity], [field]: value } }))
 }
 
+async function hookOnChange(event, setState) {
+  const { target } = event
+  const field = target.name
+  const value = target.type === 'number' ? +target.value || '' : target.value
+  setState((prevState) => ({ ...prevState, [field]: value }))
+}
+
 async function onSubmit(event, thisComp, action, entity) {
   event.preventDefault()
   thisComp.props[action]({ ...thisComp.state[entity] })
+}
+
+function hookOnSubmit(event) {
+  event.preventDefault()
 }
 
 function filter(filterBy, entities) {

@@ -4,7 +4,7 @@ import { NavLink, useHistory } from 'react-router-dom'
 export const AppHeader = () => {
   const { loggedInUser } = useSelector((state) => state.authModule)
   const history = useHistory()
-  
+
   return (
     <header className="app-header">
       <section className="container">
