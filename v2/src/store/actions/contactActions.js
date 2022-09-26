@@ -48,8 +48,9 @@ export function removeContact(contactId) {
 export function saveContact(contact) {
   return async (dispatch, getState) => {
     try {
-      const savedContact = await contactService.save(contact)
-      contact.id ? dispatch({ type: 'UPDATE_CONTACT', savedContact }) : dispatch({ type: 'ADD_CONTACT', savedContact })
+      console.log(contact)
+      const savedContact = await contactService.save({ ...contact })
+      contact._id ? dispatch({ type: 'UPDATE_CONTACT', savedContact }) : dispatch({ type: 'ADD_CONTACT', savedContact })
     } catch (err) {
       console.log('err:', err)
     }

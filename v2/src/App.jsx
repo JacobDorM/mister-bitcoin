@@ -71,7 +71,7 @@ export const App = () => {
       <AppHeader />
       <main className="container">
         <Switch>
-          <Route path="/contact/edit/:id?" render={(props) => <ContactEdit {...props} onSubmitContact={onSubmitContact} onChange={onChangeContact} />} />
+          <Route path="/contact/edit/:id?" render={(props) => <ContactEdit {...props} onSubmitContact={onSubmitContact} onChange={onChangeContact} contact={contact} />} />
           <PrivateRoute path="/contact/:id" render={(props) => <ContactDetails {...props} onTransferCoins={onTransferCoins} onChangefunds={async (e) => await utilService.hookOnChange(e, setFunds)} funds={funds} loggedInUser={loggedInUser} contact={contact} />} />
           <LoggedInUserRoute path="/about" component={About} loggedInUser={loggedInUser} />
           <LoggedInUserRoute path="/contacts" component={ContactApp} loggedInUser={loggedInUser} />
