@@ -19,7 +19,6 @@ export function contactReducer(state = INITIAL_STATE, action) {
       }
 
     case 'ADD_CONTACT':
-      console.log(state)
       return {
         ...state,
         contacts: [...state.contacts, action.savedContact],

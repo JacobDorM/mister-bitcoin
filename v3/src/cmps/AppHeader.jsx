@@ -1,9 +1,9 @@
 import { useSelector } from 'react-redux'
-import { NavLink, useHistory } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 export const AppHeader = () => {
   const { loggedInUser } = useSelector((state) => state.authModule)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   return (
     <header className="app-header">
@@ -18,10 +18,10 @@ export const AppHeader = () => {
           ''
         )}
         <section className="back">
-          <button onClick={history.goBack}>Back</button>
+          <button onClick={() => navigate(-1)}>Back</button>
         </section>
         <nav>
-          <NavLink exact to="/">
+          <NavLink to="/" end>
             Home
           </NavLink>
           <NavLink to="/contacts">Contacts</NavLink>

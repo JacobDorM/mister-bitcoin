@@ -1,23 +1,4 @@
-import { NavLink, Route } from 'react-router-dom'
-
-const Team = () => {
-  return (
-    <ul>
-      <li>Moshe Leon</li>
-      <li>Lala Ben Regev</li>
-      <li>Shimon DiCaprio</li>
-    </ul>
-  )
-}
-
-const Vision = () => {
-  return (
-    <ol>
-      <li>Save the world with our contacts</li>
-      <li>Take over the world with our contacts</li>
-    </ol>
-  )
-}
+import { NavLink, Outlet } from 'react-router-dom'
 
 export const About = () => {
   return (
@@ -28,13 +9,12 @@ export const About = () => {
       </section>
 
       <nav>
-        <NavLink to="/about/team">Team</NavLink>
-        <NavLink to="/about/vision">Vision</NavLink>
+        <NavLink replace to="/about/team">Team</NavLink>
+        <NavLink replace to="/about/vision">Vision</NavLink>
       </nav>
 
       <section>
-        <Route path="/about/team" component={Team} />
-        <Route path="/about/vision" component={Vision} />
+        <Outlet />
       </section>
     </section>
   )

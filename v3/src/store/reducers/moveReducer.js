@@ -19,6 +19,7 @@ export function moveReducer(state = INITIAL_STATE, action) {
       }
 
     case 'ADD_MOVE':
+      console.log(state)
       return {
         ...state,
         moves: [...state.moves, action.savedMove],

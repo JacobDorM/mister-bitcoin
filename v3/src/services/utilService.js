@@ -29,16 +29,27 @@ function makeId(length = 5) {
 }
 
 function sortBy(entities, field) {
-  return entities.sort((a, b) => {
-    if (a[field].toLocaleLowerCase() < b[field].toLocaleLowerCase()) {
-      return -1
-    }
-    if (a[field].toLocaleLowerCase() > b[field].toLocaleLowerCase()) {
-      return 1
-    }
-
-    return 0
-  })
+  if (typeof entities[0][field] === 'string') {
+    return entities.sort((a, b) => {
+      if (a[field].toLocaleLowerCase() < b[field].toLocaleLowerCase()) {
+        return -1
+      }
+      if (a[field].toLocaleLowerCase() > b[field].toLocaleLowerCase()) {
+        return 1
+      }
+      return 0
+    })
+  } else {
+    return entities.sort((a, b) => {
+      if (a[field] < b[field]) {
+        return -1
+      }
+      if (a[field] > b[field]) {
+        return 1
+      }
+      return 0
+    })
+  }
 }
 
 async function onChange(event, thisComp, entity) {

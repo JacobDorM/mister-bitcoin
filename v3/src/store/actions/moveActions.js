@@ -48,7 +48,11 @@ export function removeMove(moveId) {
 export function saveMove(loggedInUser, contact, amount) {
   return async (dispatch, getState) => {
     try {
+      console.log('loggedInUser', loggedInUser)
+      console.log('contact', contact)
+      console.log('amount', amount)
       const savedMove = await moveService.save(loggedInUser, contact, amount)
+      console.log('savedMove', savedMove)
       dispatch({ type: 'ADD_MOVE', savedMove })
       return savedMove
     } catch (err) {

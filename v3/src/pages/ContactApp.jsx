@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { NiceButton } from '../cmps/NiceButton'
 import { ContactFilter } from '../cmps/ContactFilter'
 import { ContactList } from '../cmps/ContactList'
@@ -14,7 +14,6 @@ export const ContactApp = () => {
   const [localFilterBy, setLocalFilterBy] = useState(filterBy)
 
   const dispatch = useDispatch()
-  const history = useHistory()
 
   useEffect(() => {
     dispatch(loadContacts())
@@ -45,7 +44,7 @@ export const ContactApp = () => {
     <div className="contact-app">
       <ContactFilter onChangeFilter={(e) => utilService.hookOnChange(e, setLocalFilterBy)} filterBy={localFilterBy} />
       <Link to={'/contact/edit'}>Add Contact</Link>
-      <ContactList history={history} onRemoveContact={onRemoveContact} contacts={contacts} />
+      <ContactList onRemoveContact={onRemoveContact} contacts={contacts} />
       <NiceButton Icon={Icon} className="nice-button" onClick={() => console.log('nice button clicked')}>
         <TextCmp />
       </NiceButton>

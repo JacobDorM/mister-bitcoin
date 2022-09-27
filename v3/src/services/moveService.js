@@ -19,7 +19,7 @@ async function getEmpty() {
 
 async function query() {
   let moves = await storageService.query(MOVES_KEY)
-  return utilService.sortBy(moves, 'username')
+  return utilService.sortBy(moves, 'amount')
 }
 
 function remove(id) {

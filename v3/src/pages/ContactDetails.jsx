@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { loadContact } from '../store/actions/contactActions'
 import { TransferFund } from '../cmps/TransferFund'
@@ -8,7 +8,7 @@ import { MoveList } from '../cmps/MoveList'
 export const ContactDetails = (props) => {
   let params = useParams()
   const dispatch = useDispatch()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const { onTransferCoins, onChangefunds, funds, loggedInUser, contact } = props
 
@@ -17,11 +17,11 @@ export const ContactDetails = (props) => {
   }, [params.id, dispatch])
 
   const onBack = () => {
-    history.push('/contacts')
+    navigate('/contacts')
   }
 
   if (!contact || !loggedInUser) return <div>Loading...</div>
-  const moves = loggedInUser.moves.filter((move) => move.to._id === contact._id)
+  const moves = loggedInUser.moves.filter((move) => (move ? move.to._id === contact._id : ''))
   return (
     <div className="contact-details">
       {Object.entries(contact).map(([key, value]) => {
