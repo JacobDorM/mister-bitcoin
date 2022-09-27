@@ -29,7 +29,7 @@ function makeId(length = 5) {
 }
 
 function sortBy(entities, field) {
-  if (typeof entities[0][field] === 'string') {
+  if (typeof entities[0]?.[field] === 'string') {
     return entities.sort((a, b) => {
       if (a[field].toLocaleLowerCase() < b[field].toLocaleLowerCase()) {
         return -1

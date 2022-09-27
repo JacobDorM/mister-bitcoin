@@ -12,7 +12,6 @@ export const ContactApp = () => {
   const { contacts, filterBy } = useSelector((state) => state.contactModule)
   const { loggedInUser } = useSelector((state) => state.authModule)
   const [localFilterBy, setLocalFilterBy] = useState(filterBy)
-
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -20,6 +19,7 @@ export const ContactApp = () => {
   }, [dispatch])
 
   useEffect(() => {
+    if (!localFilterBy) return
     const onChangeFilterUpdate = async () => {
       await dispatch(setFilterBy({ ...localFilterBy }))
       await dispatch(loadContacts())
@@ -28,9 +28,12 @@ export const ContactApp = () => {
     onChangeFilterUpdate()
   }, [localFilterBy, dispatch])
 
-  const onRemoveContact = async (contactId) => {
-    await dispatch(removeContact(contactId))
-  }
+  const onRemoveContact = useCallback(
+    (contactId) => {
+      dispatch(removeContact(contactId))
+    },
+    [dispatch]
+  )
 
   const onChangeFilter = useCallback((e) => {
     utilService.hookOnChange(e, setLocalFilterBy)
@@ -41,6 +44,7 @@ export const ContactApp = () => {
   }
 
   if (!contacts) return <div>Loading...</div>
+  console.log(contacts)
   const TextCmp = () => <span>Nice Button</span>
   const Icon = () => '🍇'
   // to="/contact/edit"
