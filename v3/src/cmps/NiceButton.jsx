@@ -1,4 +1,6 @@
-export const NiceButton = ({ Icon, children, ...restOfProps }) => {
+import { memo } from 'react'
+
+export const NiceButton = memo(({ Icon, children, ...restOfProps }) => {
   return (
     <button {...restOfProps}>
       {Icon && <Icon />}
@@ -6,4 +8,4 @@ export const NiceButton = ({ Icon, children, ...restOfProps }) => {
       {children}
     </button>
   )
-}
+})

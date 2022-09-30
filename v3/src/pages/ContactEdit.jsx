@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { loadContact, loadContacts } from '../store/actions/contactActions'
+import { loadContact } from '../store/actions/contactActions'
 import { FormTemplate } from '../cmps/FormTemplate'
 
 export const ContactEdit = (props) => {
@@ -12,10 +12,6 @@ export const ContactEdit = (props) => {
   const { onChange, onSubmitContact } = props
   const selectedFormFields = ['name', 'email', 'phone']
   const onSubmit = { action: (e) => onSubmitContact(e), forHtml: 'Save' }
-
-  useEffect(() => {
-    dispatch(loadContacts())
-  }, [dispatch])
 
   useEffect(() => {
     const contactId = params.id

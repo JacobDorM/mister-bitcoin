@@ -11,8 +11,9 @@ import { Statistics } from './pages/Statistics'
 import { Signup } from './pages/Signup'
 import { getLoggedInUser, addMove } from './store/actions/authActions'
 import { utilService } from './services/utilService'
-import { setContact, saveContact } from './store/actions/contactActions'
+import { setContact, saveContact, loadContacts } from './store/actions/contactActions'
 import { loadMoves } from './store/actions/moveActions'
+
 const PrivateRoute = ({ children }) => {
   const isAdmin = true
   return isAdmin ? children : <Navigate to="/contacts" />
@@ -59,6 +60,7 @@ export const App = () => {
 
   useEffect(() => {
     dispatch(getLoggedInUser())
+    dispatch(loadContacts())
   }, [dispatch])
 
   const onTransferCoins = async (e) => {

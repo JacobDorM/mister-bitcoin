@@ -15,10 +15,6 @@ export const ContactApp = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(loadContacts())
-  }, [dispatch])
-
-  useEffect(() => {
     if (!localFilterBy) return
     const onChangeFilterUpdate = async () => {
       await dispatch(setFilterBy({ ...localFilterBy }))
@@ -39,24 +35,29 @@ export const ContactApp = () => {
     utilService.hookOnChange(e, setLocalFilterBy)
   }, [])
 
-  const onSpendCoins = async () => {
-    await dispatch(spendCoins(loggedInUser, 5))
-  }
+  const onSpendCoins = useCallback(() => {
+    dispatch(spendCoins(loggedInUser, 5))
+  }, [dispatch, loggedInUser])
+
+  const onClickedLog = useCallback(() => {
+    console.log('nice button clicked')
+  }, [])
+
+  const logIcon = useCallback(() => '🍇', [])
+  const spendIcon = useCallback(() => '💰', [])
+  // const TextCmp = memo(() => <span>Nice Button</span>)
 
   if (!contacts) return <div>Loading...</div>
-  console.log(contacts)
-  const TextCmp = () => <span>Nice Button</span>
-  const Icon = () => '🍇'
-  // to="/contact/edit"
+
   return (
     <div className="contact-app">
       <ContactFilter onChangeFilter={onChangeFilter} filterBy={localFilterBy} />
       <Link to={'/contact/edit'}>Add Contact</Link>
       <ContactList onRemoveContact={onRemoveContact} contacts={contacts} />
-      <NiceButton Icon={Icon} className="nice-button" onClick={() => console.log('nice button clicked')}>
-        <TextCmp />
+      <NiceButton Icon={logIcon} className="nice-button" onClick={onClickedLog}>
+        Nice Button
       </NiceButton>
-      <NiceButton Icon={() => '💰'} className="nice-button" onClick={onSpendCoins}>
+      <NiceButton Icon={spendIcon} className="nice-button" onClick={onSpendCoins}>
         Spend Coins
       </NiceButton>
     </div>

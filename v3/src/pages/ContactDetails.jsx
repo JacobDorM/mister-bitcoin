@@ -34,7 +34,7 @@ export const ContactDetails = (props) => {
       <img src={`https://robohash.org/${contact._id}`} alt="" />
       <button onClick={onBack}>Back</button>
       {/* <Link to="/contact/r3">Next Contact</Link> */}
-      <TransferFund contact={contact} onTransferCoins={onTransferCoins} onChange={onChangefunds} value={funds} />
+      <TransferFund contact={contact} onTransferCoins={onTransferCoins} onChangefunds={onChangefunds} funds={funds} />
       <MoveList moves={moves} />
     </div>
   )
