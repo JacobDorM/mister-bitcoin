@@ -8,15 +8,21 @@ import { useForm } from '../customHooks/useForm'
 export const Signup = () => {
   const dispatch = useDispatch()
 
-  const [signupUser, handleChangeSignupUser] = useForm(userService.getEmpty())
+  const [signupUser, handleChangeSignupUser, setSignupUser] = useForm(userService.getEmpty())
   const [loginUser, handleChangeLoginUser] = useForm(null)
 
   const hookOnSubmit = utilService.hookOnSubmit
 
+  const submitSignup = (e) => {
+    e.preventDefault()
+    dispatch(signup(signupUser))
+    setSignupUser(userService.getEmpty())
+  }
+
   const selectedFormFieldsSignup = ['fullname', 'username', 'password']
   const selectedFormFieldsLogin = ['username', 'password']
 
-  const onSubmitSignup = { action: (e) => hookOnSubmit(e, dispatch(signup(signupUser))), forHtml: 'Signup' }
+  const onSubmitSignup = { action: submitSignup, forHtml: 'Signup' }
   const onSubmitLogin = { action: (e) => hookOnSubmit(e, dispatch(login(loginUser))), forHtml: 'Login' }
 
   return (
