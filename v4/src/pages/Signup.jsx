@@ -1,39 +1,29 @@
-import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-// import { userService } from '../services/userService'
+import { userService } from '../services/userService'
 import { utilService } from '../services/utilService'
 import { FormTemplate } from '../cmps/FormTemplate'
 import { login, signup } from '../store/actions/authActions'
 import { useForm } from '../customHooks/useForm'
 
 export const Signup = () => {
-  // const [signupUser, setSignupUser] = useState(null)
-  const [loginUser, setLoginUser] = useState(null)
   const dispatch = useDispatch()
 
-  const [signupUser, handleChangeSignupUser] = useForm(null)
+  const [signupUser, handleChangeSignupUser] = useForm(userService.getEmpty())
+  const [loginUser, handleChangeLoginUser] = useForm(null)
 
-  const hookOnChange = utilService.hookOnChange
   const hookOnSubmit = utilService.hookOnSubmit
 
-  const selectedFormFields = ['fullname', 'username', 'password']
+  const selectedFormFieldsSignup = ['fullname', 'username', 'password']
+  const selectedFormFieldsLogin = ['username', 'password']
+
   const onSubmitSignup = { action: (e) => hookOnSubmit(e, dispatch(signup(signupUser))), forHtml: 'Signup' }
   const onSubmitLogin = { action: (e) => hookOnSubmit(e, dispatch(login(loginUser))), forHtml: 'Login' }
 
-  // useEffect(() => {
-  //   getEmptyUser()
-  // }, [])
-
-  // const getEmptyUser = async () => {
-  //   const signupUser = await userService.getEmpty()
-  //   setSignupUser(signupUser)
-  // }
-
   return (
     <section>
-      <FormTemplate value={signupUser} selectedFormFields={selectedFormFields} onSubmit={onSubmitSignup} onChange={handleChangeSignupUser} />
+      <FormTemplate value={signupUser} selectedFormFields={selectedFormFieldsSignup} onSubmit={onSubmitSignup} onChange={handleChangeSignupUser} />
       <div>Or</div>
-      <FormTemplate value={loginUser} selectedFormFields={selectedFormFields} onSubmit={onSubmitLogin} onChange={(e) => hookOnChange(e, setLoginUser)} />
+      <FormTemplate value={loginUser} selectedFormFields={selectedFormFieldsLogin} onSubmit={onSubmitLogin} onChange={handleChangeLoginUser} />
     </section>
   )
 }

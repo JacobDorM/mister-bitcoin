@@ -13,7 +13,7 @@ const USERS_KEY = 'users'
 
 _createUsers()
 
-async function getEmpty() {
+function getEmpty() {
   return { _id: '', fullname: '', username: '', password: '', coins: 100, moves: [] }
 }
 

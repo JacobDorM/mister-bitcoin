@@ -10,7 +10,6 @@ export const Home = () => {
   const dispatch = useDispatch()
 
   const lastMoves = 3
-  const moves = loggedInUser.moves.slice(-lastMoves)
 
   useEffect(() => {
     const getBitcoinRate = async () => {
@@ -25,7 +24,12 @@ export const Home = () => {
     getBitcoinRate()
   }, [loggedInUser.coins])
 
+  const getLoggedInUserMoves = (lastMoves) => {
+    return loggedInUser.moves ? loggedInUser.moves.slice(-lastMoves) : []
+  }
+
   if (!loggedInUser) return <div>Loading...</div>
+
   return (
     <main>
       <section className="home">
@@ -35,7 +39,7 @@ export const Home = () => {
         <button onClick={() => dispatch(logout())}>Logout</button>
       </section>
       <section>
-        <MoveList moves={moves} lastMoves={lastMoves} />
+        <MoveList moves={getLoggedInUserMoves()} lastMoves={lastMoves} />
       </section>
     </main>
   )

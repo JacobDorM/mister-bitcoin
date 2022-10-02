@@ -29,8 +29,7 @@ export const ContactEdit = (props) => {
   }, [contact, setLocalContact])
 
   useEffect(() => {
-    const contactId = params.id
-    dispatch(loadContact(contactId))
+    dispatch(loadContact(params.id))
   }, [params.id, dispatch])
 
   const onSubmitContact = async (e) => {
