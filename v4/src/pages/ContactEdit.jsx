@@ -1,39 +1,45 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { loadContact } from '../store/actions/contactActions'
 import { FormTemplate } from '../cmps/FormTemplate'
-import { setContact, saveContact } from '../store/actions/contactActions'
-import { utilService } from '../services/utilService'
+import { setContact, saveContact, loadContacts } from '../store/actions/contactActions'
+import { useForm } from '../customHooks/useForm'
+import { useEffectUpdate } from '../customHooks/useEffectUpdate'
 
 export const ContactEdit = (props) => {
+  const { contact } = props
+
+  const firstTimeRender = useRef(true)
   const params = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
+  const onChangeContact = () => {
+    dispatch(setContact(localContact))
+  }
+
+  const [localContact, handleChange, setLocalContact] = useForm(contact, onChangeContact)
+
+  useEffectUpdate(() => {
+    if (firstTimeRender.current) {
+      firstTimeRender.current = false
+      setLocalContact(contact)
+    }
+  }, [contact, setLocalContact])
 
   useEffect(() => {
     const contactId = params.id
     dispatch(loadContact(contactId))
   }, [params.id, dispatch])
 
-  const [localContact, setLocalContact] = useState(null)
-
-  const onChangeContact = async (e) => {
-    setLocalContact(contact)
-    await utilService.hookOnChange(e, setLocalContact)
-  }
-
-  useEffect(() => {
-    dispatch(setContact(localContact))
-  }, [localContact, dispatch])
-
   const onSubmitContact = async (e) => {
     e.preventDefault()
     await dispatch(saveContact(localContact))
+    await dispatch(loadContacts())
     navigate('/contacts')
   }
 
-  const { contact } = props
   const selectedFormFields = ['name', 'email', 'phone']
   const onSubmit = { action: (e) => onSubmitContact(e), forHtml: 'Save' }
 
@@ -41,7 +47,7 @@ export const ContactEdit = (props) => {
   return (
     <section className="contact-edit">
       <h1>{contact._id ? 'Edit' : 'Add'} Contact</h1>
-      <FormTemplate value={contact} selectedFormFields={selectedFormFields} onSubmit={onSubmit} onChange={onChangeContact} />
+      <FormTemplate value={contact} selectedFormFields={selectedFormFields} onSubmit={onSubmit} onChange={handleChange} />
     </section>
   )
 }

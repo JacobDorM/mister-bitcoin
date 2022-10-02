@@ -15,5 +15,14 @@ export const useForm = (initialState, cb) => {
     setFields((prevFields) => ({ ...prevFields, [field]: value }))
   }
 
-  return [fields, handleChange, setFields]
+  const register = (field) => {
+    return {
+      onChange: handleChange,
+      name: field,
+      id: field,
+      value: fields[field],
+    }
+  }
+
+  return [register]
 }
