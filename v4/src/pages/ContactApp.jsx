@@ -1,31 +1,24 @@
-import { useState, useCallback } from 'react'
+import { useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { NiceButton } from '../cmps/NiceButton'
 import { ContactFilter } from '../cmps/ContactFilter'
 import { ContactList } from '../cmps/ContactList'
-import { utilService } from '../services/utilService'
 import { loadContacts, removeContact, setFilterBy } from '../store/actions/contactActions'
 import { spendCoins } from '../store/actions/authActions'
-import { useEffectUpdate } from '../customHooks/useEffectUpdate'
 
 export const ContactApp = () => {
   const { contacts, filterBy } = useSelector((state) => state.contactModule)
   const { loggedInUser } = useSelector((state) => state.authModule)
-  const [localFilterBy, setLocalFilterBy] = useState(filterBy)
   const dispatch = useDispatch()
 
-  useEffectUpdate(() => {
-    const onChangeFilterUpdate = async () => {
-      await dispatch(setFilterBy({ ...localFilterBy }))
+  const onChangeFilter = useCallback(
+    async (localFilterBy) => {
+      await dispatch(setFilterBy(localFilterBy))
       await dispatch(loadContacts())
-    }
-    onChangeFilterUpdate()
-    
-    return () => {
-      // info: before onChangeFilterUpdate but doesnt work for the first time
-    }
-  }, [localFilterBy, dispatch])
+    },
+    [dispatch]
+  )
 
   const onRemoveContact = useCallback(
     (contactId) => {
@@ -33,10 +26,6 @@ export const ContactApp = () => {
     },
     [dispatch]
   )
-
-  const onChangeFilter = useCallback((e) => {
-    utilService.hookOnChange(e, setLocalFilterBy)
-  }, [])
 
   const onSpendCoins = useCallback(() => {
     dispatch(spendCoins(loggedInUser, 5))
@@ -54,7 +43,7 @@ export const ContactApp = () => {
 
   return (
     <div className="contact-app">
-      <ContactFilter onChangeFilter={onChangeFilter} filterBy={localFilterBy} />
+      <ContactFilter onChangeFilter={onChangeFilter} filterBy={filterBy} />
       <Link to={'/contact/edit'}>Add Contact</Link>
       <ContactList onRemoveContact={onRemoveContact} contacts={contacts} />
       <NiceButton Icon={logIcon} className="nice-button" onClick={onClickedLog}>

@@ -8,11 +8,10 @@ import { ContactDetails } from './pages/ContactDetails'
 import { ContactEdit } from './pages/ContactEdit'
 import { Home } from './pages/Home'
 import { Statistics } from './pages/Statistics'
-// import { Signup } from './pages/Signup'
-import { SignupCustomHookVerison } from './pages/SignupCustomHookVerison'
+import { Signup } from './pages/Signup'
 import { getLoggedInUser, addMove } from './store/actions/authActions'
 import { utilService } from './services/utilService'
-import { setContact, saveContact, loadContacts } from './store/actions/contactActions'
+import { loadContacts } from './store/actions/contactActions'
 import { loadMoves } from './store/actions/moveActions'
 
 const PrivateRoute = ({ children }) => {
@@ -50,7 +49,6 @@ const Vision = () => {
 }
 
 export const App = () => {
-  const [localContact, setLocalContact] = useState(null)
   const [funds, setFunds] = useState(null)
 
   const { contact } = useSelector((state) => state.contactModule)
@@ -74,28 +72,13 @@ export const App = () => {
     }
   }
 
-  const onChangeContact = async (e) => {
-    setLocalContact(contact)
-    await utilService.hookOnChange(e, setLocalContact)
-  }
-
-  useEffect(() => {
-    dispatch(setContact(localContact))
-  }, [localContact, dispatch])
-
-  const onSubmitContact = async (e) => {
-    e.preventDefault()
-    await dispatch(saveContact(localContact))
-    navigate('/contacts')
-  }
-
   return (
     <div className="main-app">
       <AppHeader />
       <main className="container">
         <Routes>
-          <Route path="/contact/edit/:id" element={<ContactEdit onSubmitContact={onSubmitContact} onChange={onChangeContact} contact={contact} />} />
-          <Route path="/contact/edit/" element={<ContactEdit onSubmitContact={onSubmitContact} onChange={onChangeContact} contact={contact} />} />
+          <Route path="/contact/edit/:id" element={<ContactEdit contact={contact} />} />
+          <Route path="/contact/edit/" element={<ContactEdit contact={contact} />} />
           <Route
             path="/contact/:id"
             element={
@@ -127,7 +110,7 @@ export const App = () => {
             path="/signup"
             element={
               <NotLoggedInUserRoute loggedInUser={loggedInUser}>
-                <SignupCustomHookVerison />
+                <Signup />
               </NotLoggedInUserRoute>
             }
           />

@@ -1,12 +1,12 @@
-import { useEffect } from 'react'
+import { useEffectUpdate } from './useEffectUpdate'
 import { useState } from 'react'
 
 export const useForm = (initialState, cb) => {
   const [fields, setFields] = useState(initialState)
 
-  useEffect(() => {
+  useEffectUpdate(() => {
     cb(fields)
-  }, fields)
+  }, [fields])
 
   const handleChange = (event) => {
     const { target } = event
